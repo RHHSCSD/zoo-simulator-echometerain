@@ -10,11 +10,20 @@ package zoosim;
  */
 public class ZooSim {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
-    
+	private static int delta = 1000 / 60; // 60fps frame stop time
+
+	/**
+	 * @param args the command line arguments
+	 */
+	public static void main(String[] args) {
+		// TODO code application logic here
+	}
+
+	/**
+	 * @return the delta
+	 */
+	public static int getDelta() {
+		return delta;
+	}
+
 }
