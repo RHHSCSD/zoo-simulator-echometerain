@@ -10,6 +10,7 @@ package zoosim;
  */
 public abstract class Animal implements IEntity {
 
+	private Terrain terrain;
 	private int id;
 	private String name;
 	private String species;
@@ -24,14 +25,39 @@ public abstract class Animal implements IEntity {
 	private double direction; // degrees
 	private double hunger; // from 0 to 100
 	private double fatigue; // from 0 to 100
-	private String image;
+	private Image image;
 	private String sound;
 
+	/**
+	 * Shortcut function to convert degrees to radians
+	 *
+	 * @param degrees
+	 * @return radians
+	 */
 	protected static double rad(double degrees) {
 		return Math.toRadians(degrees);
 	}
 
-	public Animal(int id, String name, String species, Sex sex, double xPos, double yPos, double xSize, double ySize, double speed, double direction, double hunger, double fatigue, String image, String sound) {
+	/**
+	 * Default constructor to create an animal
+	 *
+	 * @param id
+	 * @param name
+	 * @param species
+	 * @param sex
+	 * @param xPos
+	 * @param yPos
+	 * @param xSize
+	 * @param ySize
+	 * @param speed
+	 * @param direction
+	 * @param hunger
+	 * @param fatigue
+	 * @param image
+	 * @param sound
+	 * @param terrain
+	 */
+	public Animal(int id, String name, String species, Sex sex, double xPos, double yPos, double xSize, double ySize, double speed, double direction, double hunger, double fatigue, Image image, String sound, Terrain terrain) {
 		this.id = id;
 		this.name = name;
 		this.species = species;
@@ -46,60 +72,115 @@ public abstract class Animal implements IEntity {
 		this.fatigue = fatigue;
 		this.image = image;
 		this.sound = sound;
+		this.terrain = terrain;
 	}
 
-	protected static double[] matrixMultiply(double[][] A, double[] v) {
-		double[] result = {A[0][0] * v[0] + A[0][1] * v[1], A[1][0] * v[0] + A[1][1] * v[1]};
-		return result;
+	/**
+	 * Check if no stamina left
+	 *
+	 * @return
+	 */
+	public boolean noStamina() {
+		if (hunger == 100) {
+			System.out.println(name + " is too hungry to perform action!!!");
+			return true;
+		} else if (fatigue == 100) {
+			System.out.println(name + " is too tired to perform action!!!");
+			return true;
+		}
+		return false;
 	}
 
+	/**
+	 * Move an animal by the vector specified (in its own coordinate system)
+	 *
+	 * @param x
+	 * @param y
+	 */
 	@Override
 	public void move(double x, double y) {
-		// degree arm = x unit vector
-		double[] xUnit = {Math.cos(rad(direction)), Math.sin(rad(direction))};
-		double[] yUnit = {Math.cos(rad(direction + 90)), Math.sin(rad(direction + 90))};
-		double[][] matrix = {{xUnit[0], yUnit[0]}, {xUnit[1], yUnit[1]}};
-
-		// calculate displacement
-		double[] displace = matrixMultiply(matrix, new double[]{x, y});
-		double newAngle = direction + Math.atan2(y, x);
+		if (noStamina()) {
+			return;
+		}
+		// real direction
+		double newAngle = getDirection() + Math.atan2(y, x);
 		if (x < 0) { // arctan angle adjustment
 			newAngle += 180;
 		}
+		newAngle %= 360;
+
+		// real distance
+		double dist = Math.hypot(x, y);
 
 		// calculate how many frames to get to delta using only x coordinate
-		double cycles = (getSpeed() * ZooSim.getDelta());
+		double cycles = dist / (getSpeed() * ZooSim.DELTA);
 
+		// using a for loop in case we're implementing it in real time
 		for (int i = 0; i < Math.floor(cycles); i++) {
-			setxPos(getxPos() + getSpeed());
-			setyPos(getyPos() + displace[1]);
-			setHunger(Math.min(100, getHunger() + Math.hypot(x, y) / getSpeed() / 100));
-			setFatigue(Math.min(100, getFatigue() + Math.hypot(x, y) / getSpeed() / 100));
+			// actually move
+			setxPos(getxPos() + getSpeed() * Math.cos(rad(newAngle)));
+			setyPos(getyPos() + getSpeed() * Math.sin(rad(newAngle)));
+			// adjust hunger and fatigue
+			setHunger(Math.min(100, getHunger() + dist / getSpeed() / 100));
+			setFatigue(Math.min(100, getFatigue() + dist / getSpeed() / 100));
+			if (noStamina()) {
+				return;
+			}
 		}
 	}
 
+	/**
+	 * Make the sound that the animal usually makes
+	 */
 	@Override
 	public void makeSound() {
+		if (noStamina()) {
+			return;
+		}
 		System.out.println(getSound());
 	}
 
+	/**
+	 * Eat an amount of food
+	 *
+	 * @param food
+	 */
 	@Override
-	public void eat(String foo) {
+	public void eat(String food) {
 		setHunger(Math.max(0, getHunger() - 10));
-		System.out.println("Yummy " + foo + "!");
+		System.out.println("Yummy " + food + "!");
 	}
 
+	/**
+	 * Sleep a number of hours
+	 *
+	 * @param hours
+	 */
 	@Override
 	public void sleep(double hours) {
 		setFatigue(Math.max(0, getFatigue() - 10 * hours));
 
 	}
 
+	/**
+	 * Turn the animal a specific number of degrees
+	 *
+	 * @param degrees
+	 */
 	@Override
 	public void turn(int degrees) {
+		if (noStamina()) {
+			return;
+		}
 		setDirection(getDirection() + degrees);
 	}
 
+	// place the animal at a particular location
+	/**
+	 *
+	 * @param x
+	 * @param y
+	 */
 	@Override
 	public void place(int x, int y) {
 		setxPos((double) x);
@@ -277,14 +358,14 @@ public abstract class Animal implements IEntity {
 	/**
 	 * @return the image
 	 */
-	public String getImage() {
+	public Image getImage() {
 		return image;
 	}
 
 	/**
 	 * @param image the image to set
 	 */
-	public void setImage(String image) {
+	public void setImage(Image image) {
 		this.image = image;
 	}
 
@@ -300,5 +381,19 @@ public abstract class Animal implements IEntity {
 	 */
 	public void setSound(String sound) {
 		this.sound = sound;
+	}
+
+	/**
+	 * @return the terrain
+	 */
+	public Terrain getTerrain() {
+		return terrain;
+	}
+
+	/**
+	 * @param terrain the terrain to set
+	 */
+	public void setTerrain(Terrain terrain) {
+		this.terrain = terrain;
 	}
 }

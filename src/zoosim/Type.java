@@ -9,7 +9,19 @@ package zoosim;
  * @author hhwl
  */
 public enum Type {
+
+	/**
+	 *
+	 */
 	FOOD,
+
+	/**
+	 *
+	 */
 	ROCK,
+
+	/**
+	 *
+	 */
 	TREE
 }

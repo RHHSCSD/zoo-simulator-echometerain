@@ -10,9 +10,19 @@ package zoosim;
  */
 public interface IFlyable extends IEntity {
 
+	/**
+	 * Make animal fly
+	 */
 	void fly();
 
+	/**
+	 * Make animal land
+	 */
 	void land();
 
+	/**
+	 *
+	 * @return If the animal is flying or not
+	 */
 	boolean isFlying();
 }

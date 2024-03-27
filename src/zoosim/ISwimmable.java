@@ -10,5 +10,9 @@ package zoosim;
  */
 public interface ISwimmable extends IEntity {
 
+	/**
+	 *
+	 * @return
+	 */
 	boolean canSurface();
 }

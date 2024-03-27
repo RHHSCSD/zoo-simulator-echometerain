@@ -8,13 +8,12 @@ package zoosim;
  *
  * @author hhwl
  */
-public abstract class LandAnim extends Animal {
+public class Owl extends BirdAnim {
 
 	/**
 	 *
 	 * @param id
 	 * @param name
-	 * @param species
 	 * @param sex
 	 * @param xPos
 	 * @param yPos
@@ -25,11 +24,10 @@ public abstract class LandAnim extends Animal {
 	 * @param hunger
 	 * @param fatigue
 	 * @param image
-	 * @param sound
 	 * @param terrain
 	 */
-	public LandAnim(int id, String name, String species, Sex sex, double xPos, double yPos, double xSize, double ySize, double speed, double direction, double hunger, double fatigue, Image image, String sound, Terrain terrain) {
-		super(id, name, species, sex, xPos, yPos, xSize, ySize, speed, direction, hunger, fatigue, image, sound, terrain);
+	public Owl(int id, String name, Sex sex, double xPos, double yPos, double xSize, double ySize, double speed, double direction, double hunger, double fatigue, Image image, Terrain terrain) {
+		super(id, name, "Owl", sex, xPos, yPos, xSize, ySize, speed, direction, hunger, fatigue, image, "Hoot!", terrain);
 	}
 
 }

@@ -10,11 +10,27 @@ package zoosim;
  */
 public interface IEntity extends IObject {
 
+	/**
+	 *
+	 * @param x
+	 * @param y
+	 */
 	void move(double x, double y);
 
+	/**
+	 *
+	 */
 	void makeSound();
 
+	/**
+	 *
+	 * @param foo
+	 */
 	void eat(String foo);
 
+	/**
+	 *
+	 * @param hours
+	 */
 	void sleep(double hours);
 }

@@ -8,15 +8,26 @@ package zoosim;
  *
  * @author hhwl
  */
-public enum Sex {
+public enum Terrain {
 
 	/**
 	 *
 	 */
-	MALE,
-
+	GROUND,
 	/**
 	 *
 	 */
-	FEMALE
+	AIR,
+	/**
+	 *
+	 */
+	WATER_SURFACE,
+	/**
+	 *
+	 */
+	MUD,
+	/**
+	 *
+	 */
+	UNDERWATER
 }

@@ -10,7 +10,16 @@ package zoosim;
  */
 public interface IObject {
 
+	/**
+	 *
+	 * @param degrees
+	 */
 	void turn(int degrees);
 
+	/**
+	 *
+	 * @param x
+	 * @param y
+	 */
 	void place(int x, int y);
 }
