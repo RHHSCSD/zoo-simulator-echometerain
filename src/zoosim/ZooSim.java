@@ -8,7 +8,12 @@ import java.util.*;
 
 /**
  *
- * @author michael.roy-diclemen
+ * @author hhwl
+ *
+ * Thinking question: I would create two arrays `eatAnimal` and `eatPlant` which
+ * contains the animals and/or plants that an animal would eat. In order to
+ * check if an animal was a carnivore or a herbivore, just check if `eatAnimal`
+ * and `eatPlant` is empty or not
  */
 public class ZooSim {
 
